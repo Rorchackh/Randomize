@@ -62,6 +62,8 @@ function randomize() {
 
     node = selection.anchorNode.parentNode;
 
+    printAllChildren(node);
+
     strings = html.split(' ').shuffle();
     for (var i = strings.length - 1; i >= 0; i--) {
         strings[i] = strings[i].shuffle();
@@ -69,3 +71,22 @@ function randomize() {
 
     node.innerHTML = node.innerHTML.replace(html, strings.join(' '));
 }
+
+function printAllChildren(node) {
+    console.log("Showing children for " + node.tagName);
+
+    if (node == undefined) {
+        // console.log("Has no children");
+        return;
+    }
+
+    for (i = 0; i < node.childNodes.length; i++) {
+        if ('tagName' in node.childNodes[i]) {
+            console.log("[ELEMENT] -- " + node.childNodes[i].tagName);
+            printAllChildren(node.childNodes[i]);
+        } else {
+            console.log("[TEXT] -- " + node.childNodes[i]);
+        }
+    }
+}
+
