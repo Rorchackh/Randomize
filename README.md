@@ -7,5 +7,5 @@ How to use
 Will be written soon
 
 To do
-=====
-Keep formatting for the selected text (b, i, em, ul, li...)
+======
+Formatting kept for P elements. Now shifting focus to UL and TABLE
