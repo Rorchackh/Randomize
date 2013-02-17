@@ -118,5 +118,5 @@ var Randomizer = {
 
 function test() {
     var r = Object.create(Randomizer);
-    r.init().randomize;
+    r.init().randomize();
 }
