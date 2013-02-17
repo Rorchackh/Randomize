@@ -1,3 +1,21 @@
+/**
+ * The Polyfill hack
+ *
+ * This hack is used to enabled Object.create in older 
+ * browser that do now support such functionality.
+ * 
+ */
+if (!Object.create) {
+    Object.create = function (o) {
+        if (arguments.length > 1) {
+            throw new Error('Object.create implementation only accepts the first parameter.');
+        }
+        function F() {}
+        F.prototype = o;
+        return new F();
+    };
+}
+
 var Randomizer = {
     selection : undefined,
     __SPACE__ : " ",
@@ -28,17 +46,6 @@ var Randomizer = {
                 a[j] = tmp;
             }
             return a.join("");
-        }
-
-        if (!Object.create) {
-            Object.create = function (o) {
-                if (arguments.length > 1) {
-                    throw new Error('Object.create implementation only accepts the first parameter.');
-                }
-                function F() {}
-                F.prototype = o;
-                return new F();
-            };
         }
 
         return this;
@@ -147,7 +154,9 @@ var Randomizer = {
     }
 };
 
-function test() {
-    var r = Object.create(Randomizer);
-    r.init().randomize();
-}
+/**
+ * Lunching the bookmarklet
+ * 
+ */
+var r = Object.create(Randomizer);
+r.init().randomize();

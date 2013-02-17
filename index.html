@@ -27,9 +27,13 @@
             </tr>
         </table>
             
-        <a href="javascript:void(test())">This</a>
-
-        <script type="text/javascript" src='Randomize.js'></script>
+        <a href="
+            javascript: (function () {
+                var jsCode = document.createElement('script');  
+                jsCode.setAttribute('src', 'https://raw.github.com/Rorchackh/Randomize/develop/Randomize.js');
+                document.body.appendChild(jsCode);
+            }());
+        ">This</a>
 
     </body>
 </html>
