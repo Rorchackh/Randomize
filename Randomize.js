@@ -1,6 +1,7 @@
 var Randomizer = {
     selection : undefined,
     __SPACE__ : " ",
+
     init: function () {
 
         Array.prototype.shuffle = function() {
@@ -42,49 +43,25 @@ var Randomizer = {
 
         return this;
     },
+
     randomize: function () {
 
         if (!Array.prototype.shuffle) {
             this.init();
         }
 
-        html = this.getSelectionHtml();
-
-        if (html == "") {
-            alert("Please select some text first!");
+        nodes = this.getSelectedNodes();
+        console.log(nodes);
+        if (nodes.length == 0) {
+            alert("Please select some text");
             return;
         }
-
-        node = this.selection.anchorNode.parentNode;
-        this.traverseRecursively(node);
-
+        
+        for (var i = nodes.length - 1; i >= 0; i--) {
+            this.traverseRecursively(nodes[i]);
+        };
     },
-    getSelectionHtml : function () {
 
-        var html = "";
-        if (typeof window.getSelection != "undefined") {
-
-            this.selection = window.getSelection();
-
-            var sel = window.getSelection();
-            if(sel.rangeCount) {
-                var container = document.createElement("div");
-                for(var i = 0, len = sel.rangeCount; i < len; ++i) {
-                    container.appendChild(sel.getRangeAt(i).cloneContents());
-                }
-                html = container.innerHTML;
-            }
-        } else if(typeof document.selection != "undefined") {
-
-            this.selection = document.selection;
-
-            if(document.selection.type == "Text") {
-                html = document.selection.createRange().htmlText;
-            }
-        }
-
-        return html;
-    },
     traverseRecursively : function (obj) {
 
         var obj = obj || document.getElementsByTagName('body')[0];
@@ -102,9 +79,13 @@ var Randomizer = {
 
                 child = child.nextSibling;
             }
+        } else if (obj.nodeType === 3) {
+            this.performShuffe(obj);
         }
 
-    }, performShuffe : function (node) {
+    }, 
+
+    performShuffe : function (node) {
 
         strings = node.wholeText.split(this.__SPACE__ ).shuffle();
         for(var i = strings.length - 1; i >= 0; i--) {
@@ -113,6 +94,56 @@ var Randomizer = {
 
         node.nodeValue = node.nodeValue.replace(node.nodeValue, strings.join(this.__SPACE__));
 
+    },
+
+    // The following functions are used to get the all nodes involved in the selection
+    nextNode: function (node) {
+        if (node.hasChildNodes()) {
+            return node.firstChild;
+        } else {
+            while (node && !node.nextSibling) {
+                node = node.parentNode;
+            }
+            if (!node) {
+                return null;
+            }
+            return node.nextSibling;
+        }
+    },
+
+    getRangeSelectedNodes: function (range) {
+        var node = range.startContainer;
+        var endNode = range.endContainer;
+
+        // Special case for a range that is contained within a single node
+        if (node == endNode) {
+            return [node];
+        }
+
+        // Iterate nodes until we hit the end container
+        var rangeNodes = [];
+        while (node && node != endNode) {
+            rangeNodes.push( node = this.nextNode(node) );
+        }
+
+        // Add partially selected nodes at the start of the range
+        node = range.startContainer;
+        while (node && node != range.commonAncestorContainer) {
+            rangeNodes.unshift(node);
+            node = node.parentNode;
+        }
+
+        return rangeNodes;
+    },
+
+    getSelectedNodes: function () {
+        if (window.getSelection) {
+            var sel = window.getSelection();
+            if (!sel.isCollapsed) {
+                return this.getRangeSelectedNodes(sel.getRangeAt(0));
+            }
+        }
+        return [];
     }
 };
 

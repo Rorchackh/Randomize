@@ -8,4 +8,7 @@ Will be written soon
 
 To do
 ======
-Formatting kept for P elements. Now shifting focus to UL and TABLE
+<ul>
+    <li>Acknowledgements</li>
+    <li>Fix empty spaces leading to shuffling of entire page</li>
+</ul>
