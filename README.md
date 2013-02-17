@@ -2,9 +2,16 @@ Randomize
 =========
 A small Bookmarklet that randomizes the selected text on a webpage
 
-How to use
+How to use [Trial]
 ==========
-Will be written soon
+Simply drag the link to your bookmark menu and you're good to go.
+<a href="
+    javascript: (function () {
+        var jsCode = document.createElement('script');  
+        jsCode.setAttribute('src', 'https://raw.github.com/Rorchackh/Randomize/develop/Randomize.js');
+        document.body.appendChild(jsCode);
+    }());
+">Drag me</a>
 
 To do
 ======
