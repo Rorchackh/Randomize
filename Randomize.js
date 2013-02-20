@@ -1,7 +1,7 @@
 /**
  * The Polyfill hack
  *
- * This hack is used to enabled Object.create in older 
+ * This hack is used to enabled Object.create() in older 
  * browser that do now support such functionality.
  * 
  */
@@ -16,10 +16,42 @@ if (!Object.create) {
     };
 }
 
+/**
+ * 
+ * All the logic behind this bookmarklet is contained
+ * withing the following single object.
+ * 
+ * @type Randomizer
+ */
 var Randomizer = {
+
+    /**
+     * The selection varible the node/text ranges
+     * selected by the user.
+     *
+     * @type {Selection}
+     * 
+     */
     selection : undefined,
+
+    /**
+     * Just a simple varibale used instead of hardcoding spaces.
+     * 
+     * @type {String}
+     */
     __SPACE__ : " ",
 
+    /**
+     * The init method is used to add shuffling methods
+     * to both arrays and string. The shuffling is based on 
+     * Fisher-Yates. Awesome examples and credit goes to 
+     * 
+     * http://sedition.com/perl/javascript-fy.html
+     * and
+     * http://stackoverflow.com/a/3943985/495416
+     * 
+     * @return {Randomizer} the current object
+     */
     init: function () {
 
         Array.prototype.shuffle = function() {
@@ -51,6 +83,12 @@ var Randomizer = {
         return this;
     },
 
+    /**
+     * This is the main function of this scripts
+     *
+     * By lunching this function, the script starts the shuffling process
+     * 
+     */
     randomize: function () {
 
         if (!Array.prototype.shuffle) {
@@ -69,6 +107,11 @@ var Randomizer = {
         };
     },
 
+    /**
+     * Tranverse the DOM tree recursively start with {obj} as root
+     * 
+     * @param  {Node} obj the node at which the traversal starts
+     */
     traverseRecursively : function (obj) {
 
         var obj = obj || document.getElementsByTagName('body')[0];
@@ -92,6 +135,12 @@ var Randomizer = {
 
     }, 
 
+    /**
+     * Given a certain node, this function shuffles both its words and letters
+     * 
+     * @param  {Node} node 
+     * 
+     */
     performShuffe : function (node) {
 
         strings = node.wholeText.split(this.__SPACE__ ).shuffle();
@@ -103,7 +152,13 @@ var Randomizer = {
 
     },
 
-    // The following functions are used to get the all nodes involved in the selection
+    /**
+     * Return the next sibling of the given node
+     * 
+     * @param  {Node} node 
+     * 
+     * @return {Node}      sibling
+     */
     nextNode: function (node) {
         if (node.hasChildNodes()) {
             return node.firstChild;
@@ -118,6 +173,17 @@ var Randomizer = {
         }
     },
 
+    /**
+     * Select nodes selected by the user at a certain range
+     *
+     * Credit to this amazing function goes to
+     *
+     * http://stackoverflow.com/a/7784176/495416
+     * 
+     * @param  {Range} range The range of selection
+     * 
+     * @return {Array}       A list of node in the range matched
+     */
     getRangeSelectedNodes: function (range) {
         var node = range.startContainer;
         var endNode = range.endContainer;
@@ -143,6 +209,15 @@ var Randomizer = {
         return rangeNodes;
     },
 
+    /**
+     * Returns an array of all nodes selected by the user
+     *
+     * Credit to this amazing function also goes to
+     *
+     * http://stackoverflow.com/a/7784176/495416
+     * 
+     * @return {Array}       A list of node matched
+     */
     getSelectedNodes: function () {
         if (window.getSelection) {
             var sel = window.getSelection();
